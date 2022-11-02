@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菜品抽签</title>
+    <style>
+        #root {
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 120px;
+        }
+
+        .btn {
+            width: 150px;
+            height: 50px;
+            border: none;
+            background-color: cadetblue;
+            color: #333;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .dishNameItem {
+            display: inline-block;
+            margin: 5px 8px;
+            padding: 10px 18px;
+            background-color: beige;
+        }
+
+        .dishNameItemActive {
+            background-color: cadetblue;;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div>
+            <span :class="`dishNameItem ${item === result ? 'dishNameItemActive' : ''}`"
+                v-for="item in dishNames">{{item}}</span>
+        </div>
+        <h1>今晚吃什么</h1>
+        <h1>{{result || '-'}}</h1>
+        <button class="btn" @click="randomName">{{btnTxt}}</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
+
+    <script>
+        Vue.config.productionTip = false
+        function getQueryVariable (variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+
+            for (var i = 0; i < vars.length; i++) {
+
+                var pair = vars[i].split("=");
+
+                if (pair[0] == variable) { return pair[1]; }
+
+            }
+
+            return (false);
+
+        }
+
+        function uniqueArr (arr1, arr2) {
+            var arr3 = arr1.concat(arr2)
+            var arr4 = []
+            for (var i = 0, len = arr3.length; i < len; i++) {
+                if (arr4.indexOf(arr3[i]) === -1) {
+                    arr4.push(arr3[i])
+                }
+            }
+            console.log(arr4)
+
+        }
+
+        new Vue({
+            el: '#root',  //
+            data: {
+                dishNames: ['蒸排骨', '茭白炒肉', '西葫芦炒肉', '豆角炒肉', '苦瓜炒牛肉', "胡萝卜炒肉", "虾", "xx炒鱿鱼", "香菇炒肉", "花椰菜炒肉", "西蓝花炒肉", "蒸鲈鱼", "炒花甲", "煎河鱼", "煎海鱼", "酸菜炒肉", "酸辣土豆丝", "肉沫豆腐", "红烧鸡翅", "西红柿炒鸡蛋", "青椒炒肉", "莲藕炒肉", "油焖鸡腿肉", "可乐鸡翅", "青椒炒鸡蛋", "手撕鸡", "水蒸蛋"],
+                result: '',
+                btnTxt: '开始',
+                open: true,
+                timer: null
+            },
+            mounted () {
+                const listString = getQueryVariable('list')
+                if (listString) {
+                    const list = getQueryVariable('list').split(',')
+                    const list2 = [...this.dishNames, ...list];
+                    this.dishNames = Array.from(new Set(list2))
+                }
+            },
+            methods: {
+                move () {
+                    // 获取一个 0-当前数组长度的随机数
+                    const random = Math.floor(Math.random() * (this.dishNames.length - 0))
+
+                    // 让随机数成为 list数组的随机下标，赋值给 result ，在页面渲染
+                    this.result = this.dishNames[random]
+                },
+                randomName () {
+                    // 流程控制开关
+                    if (this.open) {
+                        // 定义计时器，调用move方法
+                        this.timer = setInterval(this.move, 90)
+                        this.btnTxt = "停止"
+                        this.open = false
+                    } else {
+                        // 清除计时器
+                        clearInterval(this.timer)
+                        this.btnTxt = "开始"
+                        this.open = true
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>
