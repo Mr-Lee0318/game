@@ -32,20 +32,28 @@
         }
 
         .dishNameItemActive {
-            background-color: cadetblue;;
+            background-color: cadetblue;
+            ;
+        }
+
+        [v-cloak] {
+            display: none;
         }
     </style>
 </head>
 
 <body>
     <div id="root">
-        <div>
-            <span :class="`dishNameItem ${item === result ? 'dishNameItemActive' : ''}`"
-                v-for="item in dishNames">{{item}}</span>
+        <div v-cloak>
+            <div>
+                <span :class="`dishNameItem ${item === result ? 'dishNameItemActive' : ''}`"
+                    v-for="item in dishNames">{{item}}</span>
+            </div>
+            <h1>今晚吃什么</h1>
+            <h1>{{result || '-'}}</h1>
+            <button class="btn" @click="randomName">{{btnTxt}}</button>
         </div>
-        <h1>今晚吃什么</h1>
-        <h1>{{result || '-'}}</h1>
-        <button class="btn" @click="randomName">{{btnTxt}}</button>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10"></script>
 
@@ -90,8 +98,9 @@
             },
             mounted () {
                 const listString = getQueryVariable('list')
+                console.log(listString, decodeURI(listString))
                 if (listString) {
-                    const list = getQueryVariable('list').split(',')
+                    const list = decodeURI(listString).split(',')
                     const list2 = [...this.dishNames, ...list];
                     this.dishNames = Array.from(new Set(list2))
                 }
