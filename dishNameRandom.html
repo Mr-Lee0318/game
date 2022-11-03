@@ -49,7 +49,7 @@
                 <span :class="`dishNameItem ${item === result ? 'dishNameItemActive' : ''}`"
                     v-for="item in dishNames">{{item}}</span>
             </div>
-            <h1>今晚吃什么</h1>
+            <h1>{{title}}</h1>
             <h1>{{result || '-'}}</h1>
             <button class="btn" @click="randomName">{{btnTxt}}</button>
         </div>
@@ -93,11 +93,16 @@
                 dishNames: ['蒸排骨', '茭白炒肉', '西葫芦炒肉', '豆角炒肉', '苦瓜炒牛肉', "胡萝卜炒肉", "虾", "xx炒鱿鱼", "香菇炒肉", "花椰菜炒肉", "西蓝花炒肉", "蒸鲈鱼", "炒花甲", "煎河鱼", "煎海鱼", "酸菜炒肉", "酸辣土豆丝", "肉沫豆腐", "红烧鸡翅", "西红柿炒鸡蛋", "青椒炒肉", "莲藕炒肉", "油焖鸡腿肉", "可乐鸡翅", "青椒炒鸡蛋", "手撕鸡", "水蒸蛋"],
                 result: '',
                 btnTxt: '开始',
+                title: '今天吃什么',
                 open: true,
                 timer: null
             },
             mounted () {
                 const listString = getQueryVariable('list')
+                const title = getQueryVariable('title')
+                if (title) {
+                    this.title = decodeURI(title)
+                }
                 console.log(listString, decodeURI(listString))
                 if (listString) {
                     const list = decodeURI(listString).split(',')
